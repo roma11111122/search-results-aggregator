@@ -1,0 +1,22 @@
+{
+  "name": "roma11111122/search-results-aggregator",
+  "type": "library",
+  "description": "Search result aggregator library",
+  "authors": [
+    {
+      "name": "Roman",
+      "email": "roma11111122@gmail.com",
+      "homepage": "https://github.com/roma11111122"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0",
+    "guzzlehttp/guzzle": "^6.3",
+    "sunra/php-simple-html-dom-parser": "1.5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Roma11111122\\SearchResultAggregator\\": "src/"
+    }
+  }
+}

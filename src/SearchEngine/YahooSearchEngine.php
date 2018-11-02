@@ -59,6 +59,7 @@ class YahooSearchEngine implements SearchEngineInterface
             if (!empty($title) && !empty($url)) {
 
                 $result[] = [
+                    //why array in this case i need to now keys but i don't whant to do it i like objects
                     'title'         => $title,
                     'url'           => $url,
                     'result_source' => $this->engineName,
@@ -71,6 +72,7 @@ class YahooSearchEngine implements SearchEngineInterface
         return $result;
     }
 
+    //why public? why not parseHtml()
     public function parse_html($html): \simplehtmldom_1_5\simple_html_dom
     {
         return HtmlDomParser::str_get_html($html);

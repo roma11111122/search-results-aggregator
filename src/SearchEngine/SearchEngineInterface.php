@@ -20,6 +20,8 @@ interface SearchEngineInterface
      *             'result_source' => '', // The source of result
      *     ],
      */
+    //better to have some object as result like SearchResultList which will contain SearchResult[] because
+    //i can return array of apples or bananas and it will normal according to interface
     public function getSearchResultData(): array;
 
 }

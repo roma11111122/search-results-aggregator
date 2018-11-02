@@ -52,6 +52,7 @@ class GoogleSearchEngine implements SearchEngineInterface
 
         foreach ($data['items'] as $item) {
             $result[] = [
+                //why array in this case i need to now keys but i don't whant to do it i like objects
                 'title'         => $item['title'],
                 'url'           => $item['link'],
                 'result_source' => $this->engineName

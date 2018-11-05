@@ -15,28 +15,28 @@ class GoogleSearchEngine implements SearchEngineInterface
 
     /**
      * GoogleSearchEngine constructor.
-     * @param string $searchQuery
      * @param string $engineName
      * @param array $options
      */
-    public function __construct(string $searchQuery, string $engineName, array $options)
+    public function __construct(string $engineName, array $options)
     {
-        $this->searchQuery = $searchQuery;
         $this->engineName = $engineName;
         $this->options = $options;
         $this->httpClient = new \GuzzleHttp\Client();
     }
 
     /**
-     * @return array
+     * @param $searchQuery
+     * @param SearchResultList $searchResultList
+     * @return SearchResultList
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getSearchResultData(): array
+    public function getSearchResultData($searchQuery, SearchResultList $searchResultList): SearchResultList
     {
 
         $parameters = [
             'query' => [
-                'q'   => $this->searchQuery,
+                'q'   => $searchQuery,
                 'key' => $this->options['api_key'],
                 'cx'  => $this->options['cx']
             ]
@@ -48,18 +48,15 @@ class GoogleSearchEngine implements SearchEngineInterface
 
         $data = json_decode($data, true);
 
-        $result = [];
-
         foreach ($data['items'] as $item) {
-            $result[] = [
-                //why array in this case i need to now keys but i don't whant to do it i like objects
-                'title'         => $item['title'],
-                'url'           => $item['link'],
-                'result_source' => $this->engineName
-            ];
+
+            $resultItem = new SearchResultItem($item['title'], $item['link'], $this->engineName);
+
+            $searchResultList->addSearchResultItem($resultItem);
+
         }
 
-        return $result;
+        return $searchResultList;
     }
 
 }

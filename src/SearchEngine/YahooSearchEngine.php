@@ -17,28 +17,28 @@ class YahooSearchEngine implements SearchEngineInterface
 
     /**
      * YahooSearchEngine constructor.
-     * @param string $searchQuery
      * @param string $engineName
      * @param array $options
      */
-    public function __construct(string $searchQuery, string $engineName, array $options)
+    public function __construct(string $engineName, array $options)
     {
-        $this->searchQuery = $searchQuery;
         $this->engineName = $engineName;
         $this->options = $options;
         $this->httpClient = new \GuzzleHttp\Client();
     }
 
     /**
-     * @return array
+     * @param $searchQuery
+     * @param SearchResultList $searchResultList
+     * @return SearchResultList
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getSearchResultData(): array
+    public function getSearchResultData($searchQuery, SearchResultList $searchResultList): SearchResultList
     {
 
         $parameters = [
             'query' => [
-                'p' => $this->searchQuery
+                'p' => $searchQuery
             ]
         ];
 
@@ -46,9 +46,7 @@ class YahooSearchEngine implements SearchEngineInterface
 
         $data = $request->getBody();
 
-        $html = $this->parse_html($data);
-
-        $result = [];
+        $html = $this->parseHtml($data);
 
         foreach ($html->find('h3.title') as $article) {
 
@@ -58,22 +56,17 @@ class YahooSearchEngine implements SearchEngineInterface
 
             if (!empty($title) && !empty($url)) {
 
-                $result[] = [
-                    //why array in this case i need to now keys but i don't whant to do it i like objects
-                    'title'         => $title,
-                    'url'           => $url,
-                    'result_source' => $this->engineName,
-                ];
+                $resultItem = new SearchResultItem($title, $url, $this->engineName);
 
+                $searchResultList->addSearchResultItem($resultItem);
             }
 
         }
 
-        return $result;
+        return $searchResultList;
     }
 
-    //why public? why not parseHtml()
-    public function parse_html($html): \simplehtmldom_1_5\simple_html_dom
+    protected function parseHtml(string $html): \simplehtmldom_1_5\simple_html_dom
     {
         return HtmlDomParser::str_get_html($html);
     }
